@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import MainScreen from './views/MainScreen'
 
 
 const routes = [
-    { path: '/login' }
+    { path: '/MainScreen', component: MainScreen }
 ];
 
 const router = createRouter({
