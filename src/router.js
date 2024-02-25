@@ -4,8 +4,8 @@ import LoginPage from './views/LoginPage'
 
 
 const routes = [
-    { path: '/MainScreen', component: MainScreen },
-    { path: '/LoginPage', component: LoginPage}
+    { path: '/principal', component: MainScreen },
+    { path: '/entrar', component: LoginPage }
 ];
 
 const router = createRouter({
