@@ -1,48 +1,99 @@
 <template>
   <div class="header">
     <h1 class="title">Rede Eletiva</h1>
-
-    <div class="select-group">
-      <label for="select_classe">Selecionar Turma</label>
-      <select name="select_classe">
-        <option value=""></option>
-      </select>
-    </div>
+    <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
   </div>
-
+  
   <div class="container">
-    <div class="content" v-for="elective in electives" :key="elective.key">
+    <div class="loading-container" v-if="electivesLoading" >
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+    </div>
+    <div v-else class="content" v-for="elective in electives" :key="elective.key">
       <div class="context">
         <h1>{{ elective.code_elective }} - {{ elective.name_elective }}</h1>
-        <h2>Professor: Juninho</h2>
+        <h2>Professor: {{ elective.name_teacher }}</h2>
       </div>
 
       <div class="context-right">
         <h3>{{ elective.filled_vacancies }}/ {{ elective.total_vacancies }}</h3>
-        <button type="submit">Selecionar</button>
+        <button
+          @click="selectElective(elective.code_elective)"
+          type="submit"
+          :class="
+            student.length > 0 &&
+            elective.code_elective === student[0].code_elective
+              ? 'selected-on'
+              : 'selected-off'
+          "
+        >
+          {{
+            student.length > 0 &&
+            elective.code_elective === student[0].code_elective
+              ? "Selecionado"
+              : "Selecionar"
+          }}
+        </button>
       </div>
     </div>
-    <button class="confirm-button" type="submit">Confirmar</button>
+    <button class="confirm-button" type="submit" @click="confirmSelection">
+      Confirmar
+    </button>
+    <button
+      v-show="student.length > 0 && student[0].code_elective"
+      class="replace-button"
+      @click="toggleButtonReplace"
+    >
+      Trocar Eletiva
+    </button>
   </div>
   <img src="../assets/pernambucoMain.svg" class="pernambuco-main" />
 </template>
 
 <script>
-
 import axios from "axios";
 import Cookies from "js-cookie";
 
 export default {
   data() {
     return {
-      students: [],
+      electivesLoading: true,
+      student: [],
       electives: [],
+      selectedElective: "",
     };
   },
   mounted() {
-    this.fetchElectives();
+    setInterval(() => {
+      this.fetchElectives();
+    }, 10000);
+
+    this.getDataStudent();
   },
   methods: {
+    async confirmSelection() {
+      try {
+        const token = Cookies.get("_myapp_token");
+        await axios.post(
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
+
+          { code_elective: this.student[0].code_elective },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        this.fetchElectives();
+      }
+    },
+    selectElective(code_elective) {
+      if (!this.student[0].code_elective) {
+        this.student[0].code_elective = code_elective;
+      }
+    },
     async fetchElectives() {
       try {
         const token = Cookies.get("_myapp_token");
@@ -59,7 +110,30 @@ export default {
         this.electives = response.data;
       } catch (error) {
         console.log(error.message);
+      } finally {
+        this.electivesLoading = false;
       }
+    },
+    async getDataStudent() {
+      try {
+        const token = Cookies.get("_myapp_token");
+
+        const response = await axios.get(
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/dataStudent",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        this.student = response.data;
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+    toggleButtonReplace() {
+      this.student[0].code_elective = "";
     },
   },
 };
@@ -75,14 +149,15 @@ export default {
   font-size: 65px;
 }
 
+.name-title {
+  font-weight: 700;
+  color: #737373;
+}
+
 label {
   padding-right: 20px;
   font-weight: 700;
   color: #737373;
-}
-select {
-  width: 100px;
-  height: 25px;
 }
 
 .container {
@@ -96,7 +171,15 @@ select {
   border-radius: 8px;
   overflow-y: auto;
 }
-
+.loading-container {
+  width: 100%;
+  height: 470px;
+  display: flex;
+  color: #3182ce;
+  align-items: center;
+  justify-content: center;
+  font-size: 32pt;
+}
 .container .content {
   background: #3182ce5e;
   width: 80vw;
@@ -128,7 +211,7 @@ select {
   justify-content: space-between;
 }
 
-button {
+.selected-off {
   width: 150px;
   height: 35px;
   border-radius: 8px;
@@ -136,9 +219,37 @@ button {
   background: #2b6cb0;
   color: #fff;
   border: 3px solid #00000063;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.selected-off:hover {
+  background-color: #0f4a89;
+}
+
+.selected-on {
+  width: 150px;
+  height: 35px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: #b3af3a9e;
+  color: #fff;
+  border: 3px solid #00000063;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.replace-button:hover {
+  color: #000;
+  background-color: #ddd72ebe;
 }
 
 .confirm-button {
+  width: 150px;
+  height: 35px;
+  border-radius: 8px;
+  font-weight: 700;
+  border: 3px solid #00000063;
   position: fixed;
   bottom: 5%;
   right: 5%;
@@ -149,6 +260,24 @@ button {
 
 .confirm-button:hover {
   background-color: #3d7e33d0;
+}
+.replace-button {
+  width: 150px;
+  height: 35px;
+  border: 3px solid #00000063;
+  border-radius: 8px;
+  font-weight: 700;
+  position: fixed;
+  bottom: 5%;
+  right: 15%;
+  background-color: #b3af3a9e;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.replace-button:hover {
+  color: #000;
+  background-color: #ddd72ebe;
 }
 
 .pernambuco-main {

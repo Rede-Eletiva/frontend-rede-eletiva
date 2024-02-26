@@ -45,9 +45,10 @@ export default {
           payload
         );
         const { token } = response.data;
-
-        Cookie.set("_myapp_token", token);
-        this.$router.push("/");
+        if(response.data.success) {
+          Cookie.set("_myapp_token", token);
+          this.$router.push("/");
+        }
       } catch (error) {
         console.error("Error during login:", error);
       }
