@@ -1,4 +1,6 @@
 <template>
+  <button class="logout" @click="logout">Sair</button>
+
   <div class="header">
     <h1 class="title">Rede Eletiva</h1>
     <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
@@ -135,15 +137,38 @@ export default {
     toggleButtonReplace() {
       this.student[0].code_elective = "";
     },
+    logout() {
+      Cookies.remove("_myapp_token");
+
+      location.reload();
+    }
   },
 };
 </script>
 <style scoped>
+.logout {
+  position: fixed;
+  top: 5%;
+  right: 5%;
+  width: 150px;
+  height: 35px;
+  border: 3px solid #00000063;
+  border-radius: 8px;
+  font-weight: 700;
+  background-color: #ff00004a;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout:hover {
+  background: #ff00008e;
+}
 .header {
   width: 100vw;
   height: 150px;
   padding: 20px;
 }
+
 .title {
   color: #2b6cb0;
   font-size: 65px;

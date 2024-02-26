@@ -14,7 +14,12 @@
           <input v-model="date_birth" type="text" name="date_birth" />
         </div>
 
-        <button type="submit">Entrar</button>
+        <button type="submit">
+          <span v-if="!loginLoading">Entrar</span>
+          <span v-else>
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+          </span>
+        </button>
       </form>
     </div>
     <div class="content-right"></div>
@@ -30,10 +35,12 @@ export default {
     return {
       ra: "",
       date_birth: "",
+      loginLoading: false,
     };
   },
   methods: {
     async submit() {
+      this.loginLoading = true;
       const payload = {
         ra: this.ra,
         date_birth: this.date_birth,
@@ -45,12 +52,14 @@ export default {
           payload
         );
         const { token } = response.data;
-        if(response.data.success) {
+        if (response.data.success) {
           Cookie.set("_myapp_token", token);
           this.$router.push("/");
         }
       } catch (error) {
         console.error("Error during login:", error);
+      } finally {
+        this.loginLoading = false;
       }
     },
   },
