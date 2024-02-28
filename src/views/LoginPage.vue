@@ -2,7 +2,7 @@
   <main class="container">
     <img class="pernambuco-tape" src="../assets/pernambuco.svg" />
     <div class="content-left">
-      <h1 class="title">Rede Eletiva Test</h1>
+      <h1 class="title">Rede Eletiva</h1>
       <form @submit.stop.prevent="submit">
         <div class="input-group">
           <label for="ra">Matrícula</label>
@@ -67,17 +67,21 @@ export default {
 </script>
 
 <style scoped>
-
 @media screen and (min-width: 720px) and (max-width: 1280px) {
-    
-    .pernambuco-tape {
+  .pernambuco-tape {
     position: fixed;
     top: 0;
+    left: 0;
+    width: 92%;
+    height: 66, 7%;
+    text-align: center;
   }
 
   .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
   }
@@ -91,12 +95,14 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin-bottom: 100px;
   }
 
   .content-left .title {
     color: #3182CE;
     font-size: 36px;
     margin-bottom: 20px;
+    white-space: nowrap;
   }
 
   .content-left form {
@@ -115,6 +121,11 @@ export default {
     color: #737373;
     width: 80%;
     margin-bottom: 15px;
+    text-align: left;
+  }
+
+  form .input-group label {
+    align-self: flex-start;
   }
 
   form .input-group input {
@@ -145,19 +156,21 @@ export default {
   }
 
   .container .content-right {
-    width: 35%;
-    height: 100%;
-    background-image: url("../assets/background-students.svg");
+    width: 15%;
+    height: 10%;
+    background-image: url("../assets/loginpagerodape.svg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
   }
 
 }
+
 .pernambuco-tape {
   position: fixed;
   top: 0;
 }
+
 .container {
   display: flex;
   width: 100vw;
@@ -229,10 +242,11 @@ form .input-group input {
 }
 
 .container .content-right {
-  width: 35%;
+  width: 59vh;
+  height: 64vw;
   background-image: url("../assets/background-students.svg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: left bottom;
+  background-position: center;
 }
 </style> 
