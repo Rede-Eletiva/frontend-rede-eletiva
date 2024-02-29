@@ -119,8 +119,6 @@ export default {
 @media (min-width:1281px) {
   /* hi-res laptops and desktops */
 }
-
-
 .pernambuco-tape {
   position: fixed;
   top: 0;
@@ -202,4 +200,5 @@ form .input-group input {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: left bottom;
-}</style> 
+}
+</style> 
