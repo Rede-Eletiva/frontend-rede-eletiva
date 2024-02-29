@@ -67,10 +67,65 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width:320px) {
+  /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+}
+
+@media (min-width:480px) {
+  /* smartphones, Android phones, landscape iPhone */
+}
+
+@media (min-width:600px) {
+  /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+}
+
+@media (max-width:901px) {
+
+  .pernambuco-tape{
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: scaleX(-1);
+  }
+
+  .content-left .title {
+    margin-bottom: 10px;
+    margin-top: 80px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .container .content-right {
+    width: 100%;
+    height: auto;
+  }
+
+  .content-left {
+  width: 100%;
+  }
+}
+
+@media (min-width:1025px) {
+  /* big landscape tablets, laptops, and desktops */
+}
+
+@media (min-width:1281px) {
+  /* hi-res laptops and desktops */
+}
+
+
 .pernambuco-tape {
   position: fixed;
   top: 0;
 }
+
 .container {
   display: flex;
   width: 100vw;
@@ -147,5 +202,4 @@ form .input-group input {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: left bottom;
-}
-</style> 
+}</style> 
