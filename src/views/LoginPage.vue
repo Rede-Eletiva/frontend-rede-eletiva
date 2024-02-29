@@ -2,7 +2,7 @@
   <main class="container">
     <img class="pernambuco-tape" src="../assets/pernambuco.svg" />
     <div class="content-left">
-      <h1 class="title">Rede Eletiva Test</h1>
+      <h1 class="title">Rede Eletiva</h1>
       <form @submit.stop.prevent="submit">
         <div class="input-group">
           <label for="ra">Matrícula</label>
