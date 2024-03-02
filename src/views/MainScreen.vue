@@ -3,52 +3,62 @@
 
   <div class="header">
     <h1 class="title">Rede Eletiva</h1>
-    <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
   </div>
   
-  <div class="container">
-    <div class="loading-container" v-if="electivesLoading" >
-      <i class="fa-solid fa-circle-notch fa-spin"></i>
-    </div>
-    <div v-else class="content" v-for="elective in electives" :key="elective.key">
-      <div class="context">
-        <h1>{{ elective.code_elective }} - {{ elective.name_elective }}</h1>
-        <h2>Professor: {{ elective.name_teacher }}</h2>
+  <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
+  <main v-if="student.length > 0">
+    <div v-for="(frameElectives, frame) in groupedElectives"
+      :key="frame">
+      <div class="container">
+        <div class="loading-container" v-if="electivesLoading" >
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </div>
+        <div v-else class="content"  v-for="elective in frameElectives"
+        :key="elective.key">
+          <div class="context">
+            <h1>{{ elective.name_elective }}</h1>
+            <h2>Professor: {{ elective.name_teacher }}</h2>
+          </div>
+          <div class="context-right">
+            <h3>{{ elective.filled_vacancies }}/{{ elective.total_vacancies }}</h3>
+            <button
+              @click="selectElective(elective.frame, elective.code_elective)"
+              type="submit"
+              :class="
+                student.length > 0 &&
+                elective.code_elective === student[0].code_elective
+                  ? 'selected-on'
+                  : 'selected-off'
+              "
+            >
+              {{
+                student.length > 0 &&
+                elective.code_elective === student[0].code_elective
+                  ? "Selecionado"
+                  : "Selecionar"
+              }}
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div class="context-right">
-        <h3>{{ elective.filled_vacancies }}/ {{ elective.total_vacancies }}</h3>
-        <button
-          @click="selectElective(elective.code_elective)"
-          type="submit"
-          :class="
-            student.length > 0 &&
-            elective.code_elective === student[0].code_elective
-              ? 'selected-on'
-              : 'selected-off'
-          "
-        >
-          {{
-            student.length > 0 &&
-            elective.code_elective === student[0].code_elective
-              ? "Selecionado"
-              : "Selecionar"
-          }}
-        </button>
+      <div class="container-button">
+        <div class="border-button">
+          <button
+            v-if="student.length > 0 && student[0].code_elective"
+            class="replace-button"
+            @click="toggleButtonReplace"
+          >
+            Trocar Eletiva
+          </button>
+          <button v-else class="confirm-button" type="submit" @click="confirmSelection">
+            Confirmar
+          </button>
+        </div>
       </div>
     </div>
-    <button class="confirm-button" type="submit" @click="confirmSelection">
-      Confirmar
-    </button>
-    <button
-      v-show="student.length > 0 && student[0].code_elective"
-      class="replace-button"
-      @click="toggleButtonReplace"
-    >
-      Trocar Eletiva
-    </button>
-  </div>
+  </main>
   <img src="../assets/pernambucoMain.svg" class="pernambuco-main" />
+  <img src="../assets/pernambuco-main-mobile.svg" class="pernambuco-main-mobile" />
 </template>
 
 <script>
@@ -64,19 +74,36 @@ export default {
       selectedElective: "",
     };
   },
-  mounted() {
-    setInterval(() => {
-      this.fetchElectives();
-    }, 10000);
+  
+  computed: {
+    groupedElectives() {
+      const electivesByFrame = {};
 
+      this.electives.forEach((elective) => {
+        const frame = elective.frame;
+
+        if (!electivesByFrame[frame]) {
+          electivesByFrame[frame] = [];
+        }
+
+        electivesByFrame[frame].push(elective);
+      });
+
+      return electivesByFrame;
+    },
+  },
+
+  mounted() {
+    this.fetchElectives();
     this.getDataStudent();
   },
+
   methods: {
     async confirmSelection() {
       try {
         const token = Cookies.get("_myapp_token");
         await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
+          "http://localhost:3000/api/v1/students/register",
 
           { code_elective: this.student[0].code_elective },
           {
@@ -91,17 +118,16 @@ export default {
         this.fetchElectives();
       }
     },
-    selectElective(code_elective) {
-      if (!this.student[0].code_elective) {
-        this.student[0].code_elective = code_elective;
-      }
+    selectElective(frame, code_elective) {
+      console.log(frame, code_elective);
+
     },
     async fetchElectives() {
       try {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/discipline/list-electives",
+          "http://localhost:3000/api/v1/discipline/list-electives",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -110,6 +136,8 @@ export default {
         );
 
         this.electives = response.data;
+
+        console.log(this.electives);
       } catch (error) {
         console.log(error.message);
       } finally {
@@ -121,7 +149,7 @@ export default {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/dataStudent",
+          "http://localhost:3000/api/v1/students/dataStudent",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -139,15 +167,71 @@ export default {
     },
     logout() {
       Cookies.remove("_myapp_token");
-
       location.reload();
-    }
+    },
   },
 };
 </script>
 <style scoped>
+
+@media (max-width:768px) {
+  .container {
+   min-height: 0px !important;
+   max-height: 360px !important;
+
+  }
+  .logout {
+    display: none;
+  }
+  .title {
+    font-size: 32pt !important;
+    text-align: center;
+  }
+
+  .name-title {
+    font-size: 14pt;
+  }
+
+  .content {
+    height: 80px !important;
+    width: 100% !important;
+    padding: 10px !important;    
+  }
+
+  .content .context h1 {
+    font-size: 12pt !important;
+    width: 100%;
+  }
+
+  .content .context h2 {
+    font-size: 10pt !important;
+  }
+
+  .selected-on, .selected-off {
+    width: 80px !important;
+    font-size: 8pt !important;
+  }
+
+  .container .context-right h3 {
+    font-size: 8pt !important;
+  }
+
+  .pernambuco-main {
+    display: none;
+  }
+
+  .pernambuco-main-mobile {
+    display: block !important;
+    position: absolute !important;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 468px;
+  }
+}
+
 .logout {
-  position: fixed;
+  position: absolute;
   top: 5%;
   right: 5%;
   width: 150px;
@@ -177,6 +261,7 @@ export default {
 .name-title {
   font-weight: 700;
   color: #737373;
+  margin-left: 20px;
 }
 
 label {
@@ -188,13 +273,18 @@ label {
 .container {
   margin-left: 20px;
   width: 96vw;
-  min-height: 76vh;
-  max-height: 76vh;
+  min-height: 60vh;
+  max-height: 60vh;
   background: #fff;
   border: #7373736a 3px solid;
   padding: 15px;
   border-radius: 8px;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
 }
 .loading-container {
   width: 100%;
@@ -206,9 +296,10 @@ label {
   font-size: 32pt;
 }
 .container .content {
-  background: #3182ce5e;
+  position: relative;
+  background: #3182ce1a;
   width: 80vw;
-  height: 150px;
+  height: 120px;
   border: 3px solid #73737382;
   display: flex;
   padding: 15px 8px;
@@ -227,6 +318,12 @@ label {
   color: #000000b1;
 }
 
+.container .context-right h3 {
+  position: absolute;
+  top: 5px;
+
+}
+
 .context-right {
   height: 100%;
   width: 30%;
@@ -237,6 +334,8 @@ label {
 }
 
 .selected-off {
+  position: absolute;
+  bottom: 5px;
   width: 150px;
   height: 35px;
   border-radius: 8px;
@@ -253,6 +352,8 @@ label {
 }
 
 .selected-on {
+  position: absolute;
+  bottom: 5px;
   width: 150px;
   height: 35px;
   border-radius: 8px;
@@ -269,15 +370,25 @@ label {
   background-color: #ddd72ebe;
 }
 
+.container-button { 
+  display: flex;
+  width: 97vw;
+  justify-content: end;
+}
+
+.border-button {
+  background: #fff;
+  border: #7373736a 3px solid;
+  padding: 15px;
+  border-top: none;
+  border-radius: 0px 0px 0px 15px;
+}
 .confirm-button {
   width: 150px;
   height: 35px;
   border-radius: 8px;
   font-weight: 700;
   border: 3px solid #00000063;
-  position: fixed;
-  bottom: 5%;
-  right: 5%;
   background-color: #3d7e3376;
   cursor: pointer;
   transition: 0.3s;
@@ -292,9 +403,6 @@ label {
   border: 3px solid #00000063;
   border-radius: 8px;
   font-weight: 700;
-  position: fixed;
-  bottom: 5%;
-  right: 15%;
   background-color: #b3af3a9e;
   cursor: pointer;
   transition: 0.3s;
@@ -304,12 +412,15 @@ label {
   color: #000;
   background-color: #ddd72ebe;
 }
-
+.pernambuco-main-mobile {
+  display: none;
+}
 .pernambuco-main {
-  position: fixed;
-  bottom: 0;
-  right: -15%;
-  z-index: -1;
+  position: absolute;
+    bottom: 0;
+    right: -33px;
+    width: 890px;
+    z-index: -1;
 }
 
 .container::-webkit-scrollbar {

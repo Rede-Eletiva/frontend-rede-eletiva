@@ -1,5 +1,6 @@
 <template>
   <main class="container">
+    <img class="pernambuco-mobile" src="../assets/pernambuco-mobile.svg" />
     <img class="pernambuco-tape" src="../assets/pernambuco.svg" />
     <div class="content-left">
       <h1 class="title">Rede Eletiva</h1>
@@ -11,7 +12,7 @@
 
         <div class="input-group">
           <label for="date_birth">Data Nascimento</label>
-          <input v-model="date_birth" type="text" name="date_birth" />
+          <input type="date" v-model="date_birth" name="date_birth" />
         </div>
 
         <button type="submit">
@@ -23,6 +24,7 @@
       </form>
     </div>
     <div class="content-right"></div>
+    <div class="footer"></div>
   </main>
 </template>
 
@@ -48,7 +50,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/login",
+          "http://localhost:3000/api/v1/students/login",
           payload
         );
         const { token } = response.data;
@@ -67,10 +69,53 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 768px) {
+  .content-left {
+    width: 100% !important;
+  }
+
+  .content-left .title {
+    font-size: 36pt !important;
+  }
+
+  .content-left form {
+    width: 100% !important;
+  }
+
+  .content-left form .input-group {
+    width: 80% !important;
+  }
+  
+  .content-right {
+    display: none;
+  }
+
+  .container .pernambuco-tape {
+    display: none;
+  }
+
+  .container .pernambuco-mobile {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    right: 0px;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.container .pernambuco-mobile {
+  display: none;
+}
+
 .pernambuco-tape {
   position: fixed;
   top: 0;
 }
+
 .container {
   display: flex;
   width: 100vw;
@@ -120,6 +165,10 @@ form .input-group input {
   height: 45px;
   border-radius: 8px;
   border: 3px solid #e8e8e8;
+  font-size: 12pt;
+  font-weight: 700px;
+  padding: 8px;
+  color: #737373;
 }
 
 .content-left form button {
