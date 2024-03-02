@@ -1,5 +1,6 @@
 <template>
   <main class="container">
+    <img class="pernambuco-mobile" src="../assets/pernambuco-mobile.svg" />
     <img class="pernambuco-tape" src="../assets/pernambuco.svg" />
     <div class="content-left">
       <h1 class="title">Rede Eletiva</h1>
@@ -11,7 +12,7 @@
 
         <div class="input-group">
           <label for="date_birth">Data Nascimento</label>
-          <input v-model="date_birth" type="text" name="date_birth" />
+          <input type="date" v-model="date_birth" name="date_birth" />
         </div>
 
         <button type="submit">
@@ -23,6 +24,7 @@
       </form>
     </div>
     <div class="content-right"></div>
+    <div class="footer"></div>
   </main>
 </template>
 
@@ -48,7 +50,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/login",
+          "http://localhost:3000/api/v1/students/login",
           payload
         );
         const { token } = response.data;
@@ -67,58 +69,48 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width:320px) {
-  /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
-}
-
-@media (min-width:480px) {
-  /* smartphones, Android phones, landscape iPhone */
-}
-
-@media (min-width:600px) {
-  /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
-}
-
-@media (max-width:901px) {
-
-  .pernambuco-tape{
-    position: fixed;
-    top: 0;
-    right: 0;
-    transform: scaleX(-1);
+@media (max-width: 768px) {
+  .content-left {
+    width: 100% !important;
   }
 
   .content-left .title {
-    margin-bottom: 10px;
-    margin-top: 80px;
+    font-size: 36pt !important;
   }
 
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
+  .content-left form {
+    width: 100% !important;
   }
 
-  .container .content-right {
-    width: 100%;
-    height: auto;
+  .content-left form .input-group {
+    width: 80% !important;
+  }
+  
+  .content-right {
+    display: none;
   }
 
-  .content-left {
-  width: 100%;
+  .container .pernambuco-tape {
+    display: none;
+  }
+
+  .container .pernambuco-mobile {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    right: 0px;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
   }
 }
 
-@media (min-width:1025px) {
-  /* big landscape tablets, laptops, and desktops */
+.container .pernambuco-mobile {
+  display: none;
 }
 
-@media (min-width:1281px) {
-  /* hi-res laptops and desktops */
-}
 .pernambuco-tape {
   position: fixed;
   top: 0;
@@ -173,6 +165,10 @@ form .input-group input {
   height: 45px;
   border-radius: 8px;
   border: 3px solid #e8e8e8;
+  font-size: 12pt;
+  font-weight: 700px;
+  padding: 8px;
+  color: #737373;
 }
 
 .content-left form button {
