@@ -136,7 +136,7 @@ export default {
       try {
         const token = Cookies.get("_myapp_token");
         await axios.post(
-          "http://localhost:3000/api/v1/students/register",
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
 
           { code_elective: this.selectedElective[frame]},
           {
@@ -170,7 +170,7 @@ export default {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "http://localhost:3000/api/v1/discipline/list-electives",
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/discipline/list-electives",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -190,7 +190,7 @@ export default {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "http://localhost:3000/api/v1/students/dataStudent",
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/dataStudent",
           {
             headers: {
               Authorization: `Bearer ${token}`,
