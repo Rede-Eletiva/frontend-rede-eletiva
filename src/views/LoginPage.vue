@@ -203,6 +203,28 @@ form .input-group input {
   color: #737373;
 }
 
+form .input-group input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}
+
+form .input-group input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  padding: 0;
+  color: #333;
+  cursor: pointer;
+}
+
+form .input-group input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
 .content-left form button {
   background-color: #2b6cb0;
   color: #fff;

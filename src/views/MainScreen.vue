@@ -406,7 +406,7 @@ label {
 .container {
   margin-left: 20px;
   width: 96vw;
-  height: 46vh;
+  height: 50%;
   background: #fff;
   border: #7373736a 3px solid;
   padding: 15px;
@@ -416,6 +416,7 @@ label {
   align-items: center;
   margin: auto;
   margin-bottom: 90px;
+  z-index: 3;
 }
 .loading-container {
   width: 100%;
