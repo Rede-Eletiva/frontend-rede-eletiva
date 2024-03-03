@@ -76,6 +76,7 @@ export default {
 
   .content-left .title {
     font-size: 36pt !important;
+
   }
 
   .content-left form {
@@ -85,7 +86,7 @@ export default {
   .content-left form .input-group {
     width: 80% !important;
   }
-  
+
   .content-right {
     display: none;
   }
@@ -99,11 +100,19 @@ export default {
     position: absolute;
     top: 0;
     right: 0px;
+    z-index: -1;
   }
 
   .footer {
+    background-image: url("../assets/Banner Eletiva (2).svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
     position: absolute;
     bottom: 0;
+    left: 0;
+    height: 150px;
+    width: 100vw;
   }
 }
 
@@ -131,13 +140,15 @@ export default {
 }
 
 .content-left .title {
-  color: #3182ce;
+  text-shadow: 1px 1px 1px #737373;
+  color: #2b6cb0;
   font-size: 72px;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: start;
   z-index: 1;
+  font-weight: 800;
 }
 
 .content-left form {
@@ -197,4 +208,4 @@ form .input-group input {
   background-size: cover;
   background-position: left bottom;
 }
-</style> 
+</style>
