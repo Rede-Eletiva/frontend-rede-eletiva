@@ -14,8 +14,12 @@
           <label for="date_birth">Data Nascimento</label>
           <input type="date" v-model="date_birth" name="date_birth" />
         </div>
-
-        <button type="submit">
+        <p class="error">{{ error }}</p>
+        <button
+          type="submit"
+          :style="{ cursor: loginLoading ? 'not-allowed' : 'pointer' }"
+          :disabled="loginLoading"
+        >
           <span v-if="!loginLoading">Entrar</span>
           <span v-else>
             <i class="fa-solid fa-circle-notch fa-spin"></i>
@@ -38,6 +42,7 @@ export default {
       ra: "",
       date_birth: "",
       loginLoading: false,
+      error: null,
     };
   },
   methods: {
@@ -59,7 +64,7 @@ export default {
           this.$router.push("/");
         }
       } catch (error) {
-        console.error("Error during login:", error);
+        this.error = error.response.data.message;
       } finally {
         this.loginLoading = false;
       }
@@ -76,7 +81,6 @@ export default {
 
   .content-left .title {
     font-size: 36pt !important;
-
   }
 
   .content-left form {
@@ -104,16 +108,31 @@ export default {
   }
 
   .footer {
-    background-image: url("../assets/Banner Eletiva (2).svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center bottom;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 150px;
-    width: 100vw;
+    background-image: url("../assets/Banner Eletiva (2).svg") !important;
+    left: 0 !important;
+    height: 150px !important;
+    width: 100vw !important;
   }
+}
+
+.footer {
+  background-image: url("../assets/footer-ete.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center bottom;
+  position: absolute;
+  bottom: 0;
+  left: -3px;
+  height: 230px;
+  width: 1000px;
+  z-index: -2;
+}
+
+.error {
+  color: #c10808;
+  font-size: 10pt;
+  font-weight: 500;
+  text-align: center;
 }
 
 .container .pernambuco-mobile {
@@ -123,6 +142,8 @@ export default {
 .pernambuco-tape {
   position: fixed;
   top: 0;
+  z-index: -1;
+  width: 950px;
 }
 
 .container {
@@ -142,7 +163,7 @@ export default {
 .content-left .title {
   text-shadow: 1px 1px 1px #737373;
   color: #2b6cb0;
-  font-size: 72px;
+  font-size: 42pt;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -158,7 +179,7 @@ export default {
   justify-content: center;
   font-size: 16pt;
   font-weight: 700;
-  height: 450px;
+  height: 400px;
   width: 660px;
   z-index: 1;
 }
@@ -167,7 +188,7 @@ form .input-group {
   display: flex;
   flex-direction: column;
   color: #737373;
-  width: 60%;
+  width: 55%;
   margin-bottom: 15px;
 }
 
@@ -185,13 +206,13 @@ form .input-group input {
 .content-left form button {
   background-color: #2b6cb0;
   color: #fff;
-  width: 60%;
+  width: 55%;
   height: 45px;
   border-radius: 8px;
   border: 3px solid #00000029;
   font-size: 16pt;
   font-weight: 700;
-  margin: 60px 0;
+  margin: 45px 0;
   z-index: 1;
   cursor: pointer;
   transition: 0.3s;
