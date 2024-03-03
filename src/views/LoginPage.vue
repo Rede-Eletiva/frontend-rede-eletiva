@@ -24,6 +24,7 @@
       </form>
     </div>
     <div class="content-right"></div>
+    <div class="content-vertic"></div>
     <div class="footer"></div>
   </main>
 </template>
@@ -85,7 +86,7 @@ export default {
   .content-left form .input-group {
     width: 80% !important;
   }
-  
+
   .content-right {
     display: none;
   }
@@ -104,6 +105,19 @@ export default {
   .footer {
     position: absolute;
     bottom: 0;
+  }
+
+  .container .content-vertic {
+    background-image: url("../assets/Banner Eletiva (2).svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 800%;
+
   }
 }
 
@@ -197,4 +211,4 @@ form .input-group input {
   background-size: cover;
   background-position: left bottom;
 }
-</style> 
+</style>
