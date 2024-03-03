@@ -120,7 +120,7 @@ export default {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center bottom;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: -3px;
   height: 230px;
