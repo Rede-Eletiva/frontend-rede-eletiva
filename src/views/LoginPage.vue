@@ -12,7 +12,7 @@
 
         <div class="input-group">
           <label for="date_birth">Data Nascimento</label>
-          <input type="date" v-model="date_birth" name="date_birth" />
+          <input type="date" v-model="date_birth" name="date_birth"  readonly/>
         </div>
         <p class="error">{{ error }}</p>
         <button
@@ -201,35 +201,6 @@ form .input-group input {
   font-weight: 700px;
   padding: 8px;
   color: #737373;
-}
-
-form .input-group input[type="date"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-indent: 1px;
-}
-
-input::-webkit-calendar-picker-indicator{
-    display: none;
-}
-
-input[type="date"]::-webkit-input-placeholder{ 
-    visibility: hidden !important;
-}
-
-
-form .input-group input[type="date"]::-webkit-calendar-picker-indicator {
-  background: transparent;
-  padding: 0;
-  color: #333;
-  cursor: pointer;
-}
-
-form .input-group input[type="date"] {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
 }
 
 .content-left form button {

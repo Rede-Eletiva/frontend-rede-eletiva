@@ -410,7 +410,7 @@ label {
   position: absolute;
   text-align: end;
   top: -35px;
-  right: 9px;
+  right: 0;
   color: #3182ce;
   font-weight: 600;
   text-transform: uppercase;
