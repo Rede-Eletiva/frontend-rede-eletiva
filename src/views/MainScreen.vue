@@ -84,6 +84,7 @@
     class="pernambuco-main-mobile"
     src="../assets/pernambuco-main-mobile .svg"
   />
+  <img class="pernambuco-main" src="../assets/pernambuco-main.svg" alt="">
   <footer class="footer"></footer>
 </template>
 
@@ -251,6 +252,7 @@ export default {
   }
 
   .menu {
+    display: block !important;
     font-size: 22pt;
   }
 
@@ -274,8 +276,22 @@ export default {
     margin: 5px 0;
   }
 
+  .title-frame {
+    right: 0 !important;
+  }
+
   .name-title {
     font-size: 14pt;
+    margin: 0 15px !important;
+  }
+
+  main {
+    align-items: center !important;
+  }
+
+  .container {
+    width: 96vw !important;
+    margin-left: 0 !important;
   }
 
   .content {
@@ -317,6 +333,7 @@ export default {
     display: none;
   }
   .pernambuco-main-mobile {
+    display: block !important;
     position: fixed !important;
     right: 0 !important;
     bottom: 0 !important;
@@ -334,6 +351,10 @@ export default {
   position: fixed;
   bottom: 0;
 }
+}
+
+.menu {
+  display: none;
 }
 
 .logout {
@@ -364,9 +385,6 @@ export default {
   color: #2b6cb0;
   font-size: 42pt;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: start;
   z-index: 1;
   font-weight: 800;
 }
@@ -375,6 +393,7 @@ export default {
   font-weight: 700;
   color: #737373;
   margin-left: 12px;
+  margin: 0 30px; 
 }
 
 label {
@@ -402,10 +421,15 @@ label {
   border-radius: 12px 12px;
   z-index: -1;
 }
-
+main {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  align-items: start;
+}
 .container {
   margin-left: 20px;
-  width: 96vw;
+  width: 75vw;
   height: 50%;
   background: #fff;
   border: #7373736a 3px solid;
@@ -413,11 +437,13 @@ label {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   margin: auto;
   margin-bottom: 90px;
   z-index: 3;
+  margin-left: 25px;
 }
+
 .loading-container {
   width: 100%;
   height: 470px;
@@ -427,10 +453,11 @@ label {
   justify-content: center;
   font-size: 32pt;
 }
+
 .container .content {
   position: relative;
   background: #3182ce1a;
-  width: 80vw;
+  width: 100%;
   height: 120px;
   border: 3px solid #73737382;
   display: flex;
@@ -517,9 +544,8 @@ label {
 
 .container-button {
   display: flex;
-  width: 96vw;
+  width: 100%;
   justify-content: end;
-  margin-right: 25px;
 }
 
 .confirm-button {
@@ -551,12 +577,14 @@ label {
   color: #000;
   background-color: #ddd72ebe;
 }
-
+.pernambuco-main-mobile {
+  display: none;
+}
 .pernambuco-main {
   position: fixed;
   bottom: 0;
-  right: -33px;
-  width: 890px;
-  z-index: -1;
+  right: 0;
+  width: 70%;
+  z-index: -2;
 }
 </style>
