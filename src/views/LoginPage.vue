@@ -12,7 +12,13 @@
 
         <div class="input-group">
           <label for="date_birth">Data Nascimento</label>
-          <input type="date" v-model="date_birth" name="date_birth"  readonly/>
+          <input
+            type="text"
+            v-model="date_birth"
+            name="date_birth"
+            @input="formatarDataInput"
+            placeholder="dd/mm/aaaa"
+          />
         </div>
         <p class="error">{{ error }}</p>
         <button
@@ -48,9 +54,26 @@ export default {
   methods: {
     async submit() {
       this.loginLoading = true;
+
+      // Validar se RA e Data de Nascimento foram preenchidos
+      if (!this.ra || !this.date_birth) {
+        this.error = "Por favor, preencha todos os campos.";
+        this.loginLoading = false;
+        return;
+      }
+
+      // Validar o formato da data (dd/mm/aaaa)
+      const dataPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+      if (!dataPattern.test(this.date_birth)) {
+        this.error = "Formato de data inválido. Use dd/mm/aaaa.";
+        this.loginLoading = false;
+        return;
+      }
+
+      // Formata a data antes de criar o payload
       const payload = {
         ra: this.ra,
-        date_birth: this.date_birth,
+        date_birth: this.formatarParaAAMMDD(this.date_birth),
       };
 
       try {
@@ -58,6 +81,7 @@ export default {
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/login",
           payload
         );
+
         const { token } = response.data;
         if (response.data.success) {
           Cookie.set("_myapp_token", token);
@@ -69,10 +93,45 @@ export default {
         this.loginLoading = false;
       }
     },
+
+    formatarDataInput() {
+      let valorSemCaracteresNaoNumericos = this.date_birth.replace(/\D/g, "");
+
+      if (valorSemCaracteresNaoNumericos.length > 2) {
+        valorSemCaracteresNaoNumericos =
+          valorSemCaracteresNaoNumericos.slice(0, 2) +
+          "/" +
+          valorSemCaracteresNaoNumericos.slice(2);
+      }
+      if (valorSemCaracteresNaoNumericos.length > 5) {
+        valorSemCaracteresNaoNumericos =
+          valorSemCaracteresNaoNumericos.slice(0, 5) +
+          "/" +
+          valorSemCaracteresNaoNumericos.slice(5);
+      }
+
+      // Limita o comprimento do campo para dd/mm/aaaa
+      if (valorSemCaracteresNaoNumericos.length > 10) {
+        valorSemCaracteresNaoNumericos = valorSemCaracteresNaoNumericos.slice(
+          0,
+          10
+        );
+      }
+
+      // Atualiza o valor no modelo
+      this.date_birth = valorSemCaracteresNaoNumericos;
+    },
+    formatarParaAAMMDD(data) {
+      const partes = data.split("/");
+      const dia = partes[0];
+      const mes = partes[1].length === 1 ? "0" + partes[1] : partes[1];
+      const ano = partes[2];
+
+      return ano + "-" + mes + "-" + dia;
+    },
   },
 };
 </script>
-
 <style scoped>
 @media (max-width: 768px) {
   .content-left {
