@@ -24,7 +24,6 @@
       </form>
     </div>
     <div class="content-right"></div>
-    <div class="content-vertic"></div>
     <div class="footer"></div>
   </main>
 </template>
@@ -77,6 +76,7 @@ export default {
 
   .content-left .title {
     font-size: 36pt !important;
+
   }
 
   .content-left form {
@@ -100,14 +100,10 @@ export default {
     position: absolute;
     top: 0;
     right: 0px;
+    z-index: -1;
   }
 
   .footer {
-    position: absolute;
-    bottom: 0;
-  }
-
-  .container .content-vertic {
     background-image: url("../assets/Banner Eletiva (2).svg");
     background-repeat: no-repeat;
     background-size: contain;
@@ -115,9 +111,8 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 800%;
-
+    height: 150px;
+    width: 100vw;
   }
 }
 
@@ -145,13 +140,15 @@ export default {
 }
 
 .content-left .title {
-  color: #3182ce;
+  text-shadow: 1px 1px 1px #737373;
+  color: #2b6cb0;
   font-size: 72px;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: start;
   z-index: 1;
+  font-weight: 800;
 }
 
 .content-left form {
