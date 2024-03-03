@@ -4,36 +4,45 @@
   <div class="header">
     <h1 class="title">Rede Eletiva</h1>
   </div>
-  
+
   <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
   <main v-if="student.length > 0">
-    <div v-for="(frameElectives, frame) in groupedElectives"
-      :key="frame">
+    <div v-for="(frameElectives, frame) in groupedElectives" :key="frame">
       <div class="container">
-        <div class="loading-container" v-if="electivesLoading" >
+        <div class="loading-container" v-if="electivesLoading">
           <i class="fa-solid fa-circle-notch fa-spin"></i>
         </div>
-        <div v-else class="content"  v-for="elective in frameElectives"
-        :key="elective.key">
+        <div
+          v-else
+          class="content"
+          v-for="(elective, index) in frameElectives"
+          :key="index"
+        >
           <div class="context">
             <h1>{{ elective.name_elective }}</h1>
             <h2>Professor: {{ elective.name_teacher }}</h2>
           </div>
           <div class="context-right">
-            <h3>{{ elective.filled_vacancies }}/{{ elective.total_vacancies }}</h3>
+            <h3>
+              {{ elective.filled_vacancies }}/{{ elective.total_vacancies }}
+            </h3>
             <button
-              @click="selectElective(elective.frame, elective.code_elective)"
+              @click="
+                selectElective(elective.frame, elective.code_elective, index)
+              "
               type="submit"
               :class="
                 student.length > 0 &&
-                elective.code_elective === student[0].code_elective
-                  ? 'selected-on'
-                  : 'selected-off'
+                statusSelectedClass(
+                  elective.frame,
+                  elective.code_elective,
+                  index
+                )
               "
             >
               {{
                 student.length > 0 &&
-                elective.code_elective === student[0].code_elective
+                elective.code_elective === selectedElective[elective.frame]
                   ? "Selecionado"
                   : "Selecionar"
               }}
@@ -44,13 +53,18 @@
       <div class="container-button">
         <div class="border-button">
           <button
-            v-if="student.length > 0 && student[0].code_elective"
+            v-if="student.length > 0 && student[0].electives[frame]"
             class="replace-button"
-            @click="toggleButtonReplace"
+            @click="toggleButtonReplace(frame)"
           >
             Trocar Eletiva
           </button>
-          <button v-else class="confirm-button" type="submit" @click="confirmSelection">
+          <button
+            v-else
+            class="confirm-button"
+            type="submit"
+            @click="confirmSelection(frame)"
+          >
             Confirmar
           </button>
         </div>
@@ -58,7 +72,10 @@
     </div>
   </main>
   <img src="../assets/pernambucoMain.svg" class="pernambuco-main" />
-  <img src="../assets/pernambuco-main-mobile.svg" class="pernambuco-main-mobile" />
+  <img
+    src="../assets/pernambuco-main-mobile.svg"
+    class="pernambuco-main-mobile"
+  />
 </template>
 
 <script>
@@ -71,10 +88,10 @@ export default {
       electivesLoading: true,
       student: [],
       electives: [],
-      selectedElective: "",
+      selectedElective: {},
     };
   },
-  
+
   computed: {
     groupedElectives() {
       const electivesByFrame = {};
@@ -99,13 +116,29 @@ export default {
   },
 
   methods: {
-    async confirmSelection() {
+    statusSelectedClass(frame, code_elective) {
+      if (
+        this.student[0].electives[frame] &&
+        this.student[0].electives[frame] === code_elective &&
+        !this.selectedElective[frame]
+      ) {
+        return "selected";
+      } else if (
+        !this.student[0].electives[frame] &&
+        this.selectedElective[frame] === code_elective
+      ) {
+        return "selected-on";
+      } else {
+        return "selected-off";
+      }
+    },
+    async confirmSelection(frame) {
       try {
         const token = Cookies.get("_myapp_token");
         await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
+          "http://localhost:3000/api/v1/students/register",
 
-          { code_elective: this.student[0].code_elective },
+          { code_elective: this.selectedElective[frame]},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -116,18 +149,28 @@ export default {
         console.log(error.message);
       } finally {
         this.fetchElectives();
+        this.getDataStudent();
+        this.selectedElective[frame] = "";
       }
     },
     selectElective(frame, code_elective) {
-      console.log(frame, code_elective);
 
+      if(!this.student[0].electives[frame]) {
+        if (frame in this.selectedElective) {
+        this.selectedElective[frame] = code_elective;
+      } else {
+        this.selectedElective[frame] = code_elective;
+      }
+      }
+      
     },
+
     async fetchElectives() {
       try {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/discipline/list-electives",
+          "http://localhost:3000/api/v1/discipline/list-electives",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -136,8 +179,6 @@ export default {
         );
 
         this.electives = response.data;
-
-        console.log(this.electives);
       } catch (error) {
         console.log(error.message);
       } finally {
@@ -149,7 +190,7 @@ export default {
         const token = Cookies.get("_myapp_token");
 
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/dataStudent",
+          "http://localhost:3000/api/v1/students/dataStudent",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -162,8 +203,8 @@ export default {
         console.log(error.message);
       }
     },
-    toggleButtonReplace() {
-      this.student[0].code_elective = "";
+    toggleButtonReplace(frame) {
+      this.student[0].electives[frame] = "";
     },
     logout() {
       Cookies.remove("_myapp_token");
@@ -173,12 +214,10 @@ export default {
 };
 </script>
 <style scoped>
-
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .container {
-   min-height: 0px !important;
-   max-height: 360px !important;
-
+    min-height: 0px !important;
+    max-height: 360px !important;
   }
   .logout {
     display: none;
@@ -195,7 +234,7 @@ export default {
   .content {
     height: 80px !important;
     width: 100% !important;
-    padding: 10px !important;    
+    padding: 10px !important;
   }
 
   .content .context h1 {
@@ -207,7 +246,9 @@ export default {
     font-size: 10pt !important;
   }
 
-  .selected-on, .selected-off {
+  .selected-on,
+  .selected-off,
+  .selected {
     width: 80px !important;
     font-size: 8pt !important;
   }
@@ -321,7 +362,6 @@ label {
 .container .context-right h3 {
   position: absolute;
   top: 5px;
-
 }
 
 .context-right {
@@ -331,6 +371,20 @@ label {
   flex-direction: column;
   align-items: end;
   justify-content: space-between;
+}
+
+.selected {
+  position: absolute;
+  bottom: 5px;
+  width: 150px;
+  height: 35px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: #3d7e33d0;
+  color: #fff;
+  border: 3px solid #00000063;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .selected-off {
@@ -370,7 +424,7 @@ label {
   background-color: #ddd72ebe;
 }
 
-.container-button { 
+.container-button {
   display: flex;
   width: 97vw;
   justify-content: end;
@@ -412,15 +466,17 @@ label {
   color: #000;
   background-color: #ddd72ebe;
 }
+
 .pernambuco-main-mobile {
   display: none;
 }
+
 .pernambuco-main {
-  position: absolute;
-    bottom: 0;
-    right: -33px;
-    width: 890px;
-    z-index: -1;
+  position: fixed;
+  bottom: 0;
+  right: -33px;
+  width: 890px;
+  z-index: -1;
 }
 
 .container::-webkit-scrollbar {
@@ -432,9 +488,11 @@ label {
 .container::-webkit-scrollbar-track {
   background: #cccccc;
 }
+
 .container::-webkit-scrollbar-track-piece {
   background: #cccccc;
 }
+
 .container::-webkit-scrollbar-thumb {
   background: #2b6cb0;
   border-radius: 5px;
