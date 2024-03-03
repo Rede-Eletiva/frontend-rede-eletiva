@@ -2,12 +2,23 @@
   <button class="logout" @click="logout">Sair</button>
 
   <div class="header">
+    <div class="menu-dropdown" @click="toggleMenu">
+      <span><i class="menu fa-solid fa-bars"></i></span>
+      <div class="menu-content" v-show="isMenuOpen">
+        <button class="logout-mobile" @click="logout">Sair</button>
+      </div>
+    </div>
     <h1 class="title">Rede Eletiva</h1>
   </div>
 
-  <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
   <main v-if="student.length > 0">
-    <div v-for="(frameElectives, frame) in groupedElectives" :key="frame">
+    <h2 class="name-title" v-if="student.length > 0">{{ student[0].name }}</h2>
+    <div
+      class="frame"
+      v-for="(frameElectives, frame) in groupedElectives"
+      :key="frame"
+    >
+      <h3 class="title-frame">{{ frame }}</h3>
       <div class="container">
         <div class="loading-container" v-if="electivesLoading">
           <i class="fa-solid fa-circle-notch fa-spin"></i>
@@ -49,9 +60,7 @@
             </button>
           </div>
         </div>
-      </div>
-      <div class="container-button">
-        <div class="border-button">
+        <div class="container-button">
           <button
             v-if="student.length > 0 && student[0].electives[frame]"
             class="replace-button"
@@ -71,11 +80,11 @@
       </div>
     </div>
   </main>
-  <img src="../assets/pernambucoMain.svg" class="pernambuco-main" />
   <img
-    src="../assets/pernambuco-main-mobile.svg"
     class="pernambuco-main-mobile"
+    src="../assets/pernambuco-main-mobile .svg"
   />
+  <footer class="footer"></footer>
 </template>
 
 <script>
@@ -89,6 +98,7 @@ export default {
       student: [],
       electives: [],
       selectedElective: {},
+      isMenuOpen: false,
     };
   },
 
@@ -113,9 +123,17 @@ export default {
   mounted() {
     this.fetchElectives();
     this.getDataStudent();
+    window.addEventListener("click", (event) => {
+      if (!event.target.closest(".menu-dropdown")) {
+        this.isMenuOpen = false;
+      }
+    });
   },
 
   methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
     statusSelectedClass(frame, code_elective) {
       if (
         this.student[0].electives[frame] &&
@@ -138,7 +156,7 @@ export default {
         await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
 
-          { code_elective: this.selectedElective[frame]},
+          { code_elective: this.selectedElective[frame] },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -154,15 +172,13 @@ export default {
       }
     },
     selectElective(frame, code_elective) {
-
-      if(!this.student[0].electives[frame]) {
+      if (!this.student[0].electives[frame]) {
         if (frame in this.selectedElective) {
-        this.selectedElective[frame] = code_elective;
-      } else {
-        this.selectedElective[frame] = code_elective;
+          this.selectedElective[frame] = code_elective;
+        } else {
+          this.selectedElective[frame] = code_elective;
+        }
       }
-      }
-      
     },
 
     async fetchElectives() {
@@ -215,16 +231,47 @@ export default {
 </script>
 <style scoped>
 @media (max-width: 768px) {
-  .container {
-    min-height: 0px !important;
-    max-height: 360px !important;
+  .menu-dropdown {
+    position: relative;
+    display: inline-block;
   }
+
+  .menu-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1;
+    border-radius: 8px;
+  }
+
+  .menu-dropdown:hover .menu-content {
+    display: block;
+  }
+
+  .menu {
+    font-size: 22pt;
+  }
+
+  .logout-mobile {
+    width: 150px;
+    height: 35px;
+    border: 3px solid #00000063;
+    border-radius: 8px;
+    font-weight: 700;
+    background-color: #ff00004a;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
   .logout {
     display: none;
   }
   .title {
     font-size: 32pt !important;
     text-align: center;
+    margin: 5px 0;
   }
 
   .name-title {
@@ -251,6 +298,15 @@ export default {
   .selected {
     width: 80px !important;
     font-size: 8pt !important;
+    height: 25px !important;
+    font-weight: 100px !important;
+  }
+
+  .confirm-button,
+  .replace-button {
+    width: 110px !important;
+    font-size: 8pt !important;
+    height: 25px !important;
   }
 
   .container .context-right h3 {
@@ -260,15 +316,24 @@ export default {
   .pernambuco-main {
     display: none;
   }
-
   .pernambuco-main-mobile {
-    display: block !important;
-    position: absolute !important;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    width: 468px;
+    position: fixed !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: -2;
   }
+
+  .footer {
+  background-image: url("../assets/footer-ete.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center bottom;
+  height: 90px;
+  width: 100%;
+  z-index: 2;
+  position: fixed;
+  bottom: 0;
+}
 }
 
 .logout {
@@ -295,14 +360,21 @@ export default {
 }
 
 .title {
+  text-shadow: 1px 1px 1px #737373;
   color: #2b6cb0;
-  font-size: 65px;
+  font-size: 42pt;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  z-index: 1;
+  font-weight: 800;
 }
 
 .name-title {
   font-weight: 700;
   color: #737373;
-  margin-left: 20px;
+  margin-left: 12px;
 }
 
 label {
@@ -311,21 +383,39 @@ label {
   color: #737373;
 }
 
+.frame {
+  position: relative;
+}
+
+.title-frame {
+  position: absolute;
+  text-align: end;
+  top: -35px;
+  right: 9px;
+  color: #3182ce;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10pt;
+  background: #fff;
+  padding: 5px 8px 20px 8px;
+  border: #7373736a 2px solid;
+  border-radius: 12px 12px;
+  z-index: -1;
+}
+
 .container {
   margin-left: 20px;
   width: 96vw;
-  min-height: 60vh;
-  max-height: 60vh;
+  height: 46vh;
   background: #fff;
   border: #7373736a 3px solid;
   padding: 15px;
   border-radius: 8px;
-  overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: auto;
+  margin-bottom: 90px;
 }
 .loading-container {
   width: 100%;
@@ -426,17 +516,11 @@ label {
 
 .container-button {
   display: flex;
-  width: 97vw;
+  width: 96vw;
   justify-content: end;
+  margin-right: 25px;
 }
 
-.border-button {
-  background: #fff;
-  border: #7373736a 3px solid;
-  padding: 15px;
-  border-top: none;
-  border-radius: 0px 0px 0px 15px;
-}
 .confirm-button {
   width: 150px;
   height: 35px;
@@ -467,34 +551,11 @@ label {
   background-color: #ddd72ebe;
 }
 
-.pernambuco-main-mobile {
-  display: none;
-}
-
 .pernambuco-main {
   position: fixed;
   bottom: 0;
   right: -33px;
   width: 890px;
   z-index: -1;
-}
-
-.container::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-  background-color: #cccccc;
-}
-
-.container::-webkit-scrollbar-track {
-  background: #cccccc;
-}
-
-.container::-webkit-scrollbar-track-piece {
-  background: #cccccc;
-}
-
-.container::-webkit-scrollbar-thumb {
-  background: #2b6cb0;
-  border-radius: 5px;
 }
 </style>
