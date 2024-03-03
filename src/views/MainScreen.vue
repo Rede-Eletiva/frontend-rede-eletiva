@@ -281,8 +281,8 @@ export default {
   }
 
   .name-title {
-    font-size: 14pt;
-    margin: 0 15px !important;
+    font-size: 12pt !important;
+    width: 95% !important;
   }
 
   main {
@@ -295,7 +295,7 @@ export default {
   }
 
   .content {
-    height: 80px !important;
+    height: 100px !important;
     width: 100% !important;
     padding: 10px !important;
   }
