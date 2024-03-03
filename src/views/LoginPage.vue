@@ -51,7 +51,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/login",
+          "http://localhost:3000/api/v1/students/login",
           payload
         );
         const { token } = response.data;
