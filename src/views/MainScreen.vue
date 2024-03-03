@@ -84,7 +84,7 @@
     class="pernambuco-main-mobile"
     src="../assets/pernambuco-main-mobile .svg"
   />
-  <img class="pernambuco-main" src="../assets/pernambuco-main.svg" alt="">
+  <img class="pernambuco-main" src="../assets/pernambuco-main.svg" alt="" />
   <footer class="footer"></footer>
 </template>
 
@@ -341,16 +341,26 @@ export default {
   }
 
   .footer {
-  background-image: url("../assets/footer-ete.svg");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center bottom;
-  height: 90px;
-  width: 100%;
-  z-index: 2;
-  position: fixed;
-  bottom: 0;
+    background-image: url("../assets/footer-ete.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+    height: 90px;
+    width: 100%;
+    z-index: 2;
+    position: fixed;
+    bottom: 0;
+  }
 }
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Esconde a seta do calendário no Firefox */
+input[type="date"] {
+  -moz-appearance: textfield;
 }
 
 .menu {
@@ -393,7 +403,7 @@ export default {
   font-weight: 700;
   color: #737373;
   margin-left: 12px;
-  margin: 0 30px; 
+  margin: 0 30px;
 }
 
 label {
