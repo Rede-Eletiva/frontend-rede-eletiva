@@ -204,12 +204,19 @@ form .input-group input {
 }
 
 form .input-group input[type="date"] {
-  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
-  text-overflow: '';
 }
+
+input::-webkit-calendar-picker-indicator{
+    display: none;
+}
+
+input[type="date"]::-webkit-input-placeholder{ 
+    visibility: hidden !important;
+}
+
 
 form .input-group input[type="date"]::-webkit-calendar-picker-indicator {
   background: transparent;
