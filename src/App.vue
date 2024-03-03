@@ -12,6 +12,6 @@
 
   body{
     background-color: #EEF5FF;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 </style>
