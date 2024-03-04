@@ -38,24 +38,22 @@
               {{ elective.filled_vacancies }}/{{ elective.total_vacancies }}
             </h3>
             <button
-              @click="
-                selectElective(elective.frame, elective.code_elective, index)
-              "
+            @click="selectElective(elective.frame, elective.code_elective, index)"
               type="submit"
-              :class="
-                student.length > 0 &&
+              :class="  elective.available_vacancies === '0' ? 'disabled' : student.length > 0 &&
                 statusSelectedClass(
                   elective.frame,
                   elective.code_elective,
                   index
-                )
-              "
+                  )
+                  "
+                :disabled="elective.available_vacancies === '0'"
             >
               {{
                 student.length > 0 &&
                 elective.code_elective === selectedElective[elective.frame]
-                  ? "Selecionado"
-                  : "Selecionar"
+                  ? "Selecionado" : elective.available_vacancies === '0' ?
+                 "Indisponível" : "Selecionar"
               }}
             </button>
           </div>
@@ -165,7 +163,7 @@ export default {
           }
         );
       } catch (error) {
-        console.log(error.message);
+        alert(error.response.data.message);
       } finally {
         this.fetchElectives();
         this.getDataStudent();
@@ -352,16 +350,6 @@ export default {
     bottom: 0;
   }
 }
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
-
-/* Esconde a seta do calendário no Firefox */
-input[type="date"] {
-  -moz-appearance: textfield;
-}
 
 .menu {
   display: none;
@@ -529,8 +517,24 @@ main {
   transition: 0.3s;
 }
 
+
+
 .selected-off:hover {
   background-color: #0f4a89;
+}
+
+.disabled {
+  position: absolute;
+  bottom: 5px;
+  width: 150px;
+  height: 35px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: #ff00004a;
+  color: #000;
+  border: 3px solid #00000063;
+  cursor: not-allowed;
+  transition: 0.3s;
 }
 
 .selected-on {
