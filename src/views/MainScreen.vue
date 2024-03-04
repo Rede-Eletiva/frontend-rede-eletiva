@@ -309,7 +309,8 @@ export default {
 
   .selected-on,
   .selected-off,
-  .selected {
+  .selected,
+  .disabled {
     width: 80px !important;
     font-size: 8pt !important;
     height: 25px !important;
