@@ -71,8 +71,12 @@
             class="confirm-button"
             type="submit"
             @click="confirmSelection(frame)"
+            :disabled="registerLoading"
           >
-            Confirmar
+          <span v-if="!registerLoading">Confirmar</span>
+          <span v-else>
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+          </span>
           </button>
         </div>
       </div>
@@ -98,6 +102,7 @@ export default {
       electives: [],
       selectedElective: {},
       isMenuOpen: false,
+      registerLoading: false
     };
   },
 
@@ -151,6 +156,7 @@ export default {
     },
     async confirmSelection(frame) {
       try {
+        this.registerLoading = true;
         const token = Cookies.get("_myapp_token");
         await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
@@ -168,6 +174,7 @@ export default {
         this.fetchElectives();
         this.getDataStudent();
         this.selectedElective[frame] = "";
+        this.registerLoading = false;
       }
     },
     selectElective(frame, code_elective) {
