@@ -31,6 +31,27 @@
             <i class="fa-solid fa-circle-notch fa-spin"></i>
           </span>
         </button>
+
+        <div class="container-modal">
+          <Modal @close="toggleModal" :modalActive="modalActive">
+              <div class="modal-content">
+                  <h1>Administrador</h1>
+                  <form>
+                      <div class="input-group">
+                          <label for="email">Email</label>
+                          <input type="text" name="email">
+                      </div>
+                      <div class="input-group">
+                          <label for="password">Senha</label>
+                          <input type="password" name="password">
+                      </div>
+                      <button>Entrar</button>
+                  </form>
+              </div>
+          </Modal>
+        </div>
+
+        <a @click="toggleModal" class="access-administrator">Administrador </a>
       </form>
     </div>
     <div class="content-right"></div>
@@ -41,8 +62,26 @@
 <script>
 import axios from "axios";
 import Cookie from "js-cookie";
+import Modal from '../components/ModalService.vue';
+import { ref } from 'vue';
 
 export default {
+  components: {
+    Modal
+  },
+  setup() {
+    const modalActive = ref(false);
+
+    const toggleModal = () => {
+      modalActive.value = !modalActive.value;
+      if (modalActive.value) {
+        document.body.classList.add('modal-open');
+      } else {
+        document.body.classList.remove('modal-open'); 
+      }
+    };
+    return { modalActive, toggleModal };
+  },
   data() {
     return {
       ra: "",
@@ -55,14 +94,13 @@ export default {
     async submit() {
       this.loginLoading = true;
 
-      // Validar se RA e Data de Nascimento foram preenchidos
+
       if (!this.ra || !this.date_birth) {
         this.error = "Por favor, preencha todos os campos.";
         this.loginLoading = false;
         return;
       }
 
-      // Validar o formato da data (dd/mm/aaaa)
       const dataPattern = /^\d{2}\/\d{2}\/\d{4}$/;
       if (!dataPattern.test(this.date_birth)) {
         this.error = "Formato de data inválido. Use dd/mm/aaaa.";
@@ -70,7 +108,6 @@ export default {
         return;
       }
 
-      // Formata a data antes de criar o payload
       const payload = {
         ra: this.ra,
         date_birth: this.formatarParaAAMMDD(this.date_birth),
@@ -110,7 +147,6 @@ export default {
           valorSemCaracteresNaoNumericos.slice(5);
       }
 
-      // Limita o comprimento do campo para dd/mm/aaaa
       if (valorSemCaracteresNaoNumericos.length > 10) {
         valorSemCaracteresNaoNumericos = valorSemCaracteresNaoNumericos.slice(
           0,
@@ -118,7 +154,6 @@ export default {
         );
       }
 
-      // Atualiza o valor no modelo
       this.date_birth = valorSemCaracteresNaoNumericos;
     },
     formatarParaAAMMDD(data) {
@@ -172,6 +207,16 @@ export default {
     height: 150px !important;
     width: 100vw !important;
   }
+}
+
+.access-administrator {
+  color: #737373;
+  font-size: 14pt;
+  transition: 0.3s;
+}
+
+.access-administrator:hover {
+  color: #2b6cb0;
 }
 
 .footer {
@@ -235,7 +280,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: 16pt;
   font-weight: 700;
   height: 400px;
@@ -248,7 +292,7 @@ form .input-group {
   flex-direction: column;
   color: #737373;
   width: 55%;
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
 form .input-group input {
@@ -271,7 +315,7 @@ form .input-group input {
   border: 3px solid #00000029;
   font-size: 16pt;
   font-weight: 700;
-  margin: 45px 0;
+  margin: 35px 0 15px;
   z-index: 1;
   cursor: pointer;
   transition: 0.3s;
@@ -288,4 +332,29 @@ form .input-group input {
   background-size: cover;
   background-position: left bottom;
 }
+
+/* Modal Style */
+.modal-open .container-modal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px); 
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content h1 {
+  margin: 35px 0;
+  color: #2b6cb0;
+}
+
 </style>
