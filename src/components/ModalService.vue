@@ -26,12 +26,19 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 768px) {
+  .modal {
+    height: 90vh;
+    width: 90vw;
+  }
+}
+
 .modal-animation-enter-active,
 .modal-animation-leave-active {
   transition: opacity .3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
 
-.modal-animation-enter-from ,
+.modal-animation-enter-from,
 
 .modal-animation-leave-to {
   opacity: 0;
@@ -77,7 +84,7 @@ export default {
   position: relative;
 }
 
-.modal-inner i{
+.modal-inner i {
   position: absolute;
   top: 15px;
   right: 45px;
@@ -88,5 +95,4 @@ export default {
 .modal-inner i:hover {
   color: #ff00007d;
 }
-
 </style>

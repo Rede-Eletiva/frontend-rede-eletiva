@@ -41,5 +41,10 @@ export default {
 </script>
 
 <style>
-
+@media (max-width: 768px) {
+  .modal {
+    height: 90vh;
+    width: 90vw;
+  }
+}
 </style>
