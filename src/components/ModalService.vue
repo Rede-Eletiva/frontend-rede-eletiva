@@ -28,21 +28,20 @@ export default {
 <style scoped>
 .modal-animation-enter-active,
 .modal-animation-leave-active {
-  transition: opacity .3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+  transition: opacity 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
 
-.modal-animation-enter-from ,
-
+.modal-animation-enter-from,
 .modal-animation-leave-to {
   opacity: 0;
 }
 
 .modal-animation-inner-enter-active {
-  transition: all .3s cubic-bezier(0.52, 0.02, 0.19, 1.02) 0.15s;
+  transition: all 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02) 0.15s;
 }
 
 .modal-animation-inner-leave-active {
-  transition: all .3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+  transition: all 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
 
 .modal-animation-inner-enter-from {
@@ -53,8 +52,6 @@ export default {
 .modal-animation-inner-leave-to {
   transform: scale(0.8);
 }
-
-
 
 .modal {
   display: flex;
@@ -74,19 +71,18 @@ export default {
 }
 
 .modal-inner {
-  position: relative;
+  width: 60%;
 }
 
-.modal-inner i{
+.modal-inner i {
   position: absolute;
-  top: 15px;
-  right: 45px;
+  font-size: 18pt;
+  top: 24px;
+  right: 35px;
   transition: 0.3s;
 }
-
 
 .modal-inner i:hover {
   color: #ff00007d;
 }
-
 </style>
