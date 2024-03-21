@@ -75,46 +75,29 @@
     </div>
   </Template>
   <Modal @close="toggleFilterModal" :modalActive="filterModalActive">
-    <div class="modal-content">
-      <h1>Filtrar Alunos</h1>
-      <form @submit.prevent="filterStudents">
-        <div
-          class="input-group"
-          v-for="(item, index) in itens.reference_classe"
-          :key="index"
-        >
+  <div class="modal-content">
+    <h1>Filtrar Alunos</h1>
+    <form @submit.prevent="filterStudents">
+      <h2 class="title">Turmas</h2>
+      <div class="input-columns">
+        <div class="column" v-for="(item, index) in itens.reference_classe" :key="index">
+          <input type="checkbox" :id="item.reference_classe" :name="item.reference_classe" v-model="item.checked" />
           <label>{{ item.reference_classe }}</label>
-          <input
-            type="checkbox"
-            :id="item.reference_classe"
-            :name="item.reference_classe"
-            v-model="item.checked"
-          />
         </div>
-        <div
-          class="input-group"
-          v-for="(item, index) in itens.module"
-          :key="index"
-        >
+      </div>
+      <h2 class="title">Ano</h2>
+      <div class="input-columns">
+        <div class="column" v-for="(item, index) in itens.module" :key="index">
+          <input type="checkbox" :id="item.module" :name="item.module" v-model="item.checked" />
           <label>{{ item.module }}</label>
-          <input
-            type="checkbox"
-            :id="item.module"
-            :name="item.module"
-            v-model="item.checked"
-          />
         </div>
-      </form>
+      </div>
+      <button class="button cancel" type="button" @click="toggleFilterModal">Cancelar</button>
+      <button class="button filter" type="submit" @click="filterStudents">Aplicar</button>
+    </form>
+  </div>
+</Modal>
 
-      <button class="button cancel" type="button" @click="toggleFilterModal">
-        Cancelar
-      </button>
-
-      <button class="button filter" type="submit" @click="filterStudents">
-        Aplicar
-      </button>
-    </div>
-  </Modal>
 
   <Modal @close="toggleAddModal" :modalActive="addModalActive">
     <div class="modal-content">
@@ -521,6 +504,65 @@ table .border-data {
 .fa-filter:hover {
   color: #2b6cb0;
 }
+
+.modal-content h1 {
+  color: #263a7f;
+  text-align: center;
+  padding: 10px;
+}
+.modal-content h1 {
+  color: #263a7f;
+  text-align: center;
+  padding: 10px;
+}
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #374c9b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #263a7f;
+}
+
+.button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #374c9b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #263a7f;
+}
+
 </style>
 
 
