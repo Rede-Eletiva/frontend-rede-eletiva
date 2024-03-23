@@ -36,16 +36,16 @@
           <Modal @close="toggleModal" :modalActive="modalActive">
               <div class="modal-content">
                   <h1>Administrador</h1>
-                  <form>
+                  <form @submit.prevent.self="loginADM">
                       <div class="input-group">
                           <label for="email">Email</label>
-                          <input type="text" name="email">
+                          <input type="text" name="email" v-model="email">
                       </div>
                       <div class="input-group">
                           <label for="password">Senha</label>
-                          <input type="password" name="password">
+                          <input type="password" name="password" v-model="password">
                       </div>
-                      <button>Entrar</button>
+                      <button type="submit" @click="loginADM">Entrar</button>
                   </form>
               </div>
           </Modal>
@@ -88,6 +88,8 @@ export default {
       date_birth: "",
       loginLoading: false,
       error: null,
+      email: "",
+      password: ""
     };
   },
   methods: {
@@ -128,6 +130,26 @@ export default {
         this.error = error.response.data.message;
       } finally {
         this.loginLoading = false;
+      }
+    },
+
+    async loginADM() {
+      const payload = {
+        email: this.email,
+        password: this.password
+      }
+
+      try {
+        const response = await axios.post('https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/login', payload);
+
+        const { token } = response.data;
+        if (response.data.success) {
+          Cookie.set("_myapp_token", token);
+          this.$router.push("/painel");
+
+        }
+      } catch (error) {
+        console.log(error.mesage)
       }
     },
 

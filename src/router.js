@@ -10,8 +10,8 @@ const routes = [
   { path: "/", component: MainScreen, beforeEnter: Guard.auth },
   { path: "/entrar", component: LoginPage },
   { path: "/painel/", component: Panel },
-  { path: "/painel/eletiva", component: PanelElective },
-  { path: "/painel/aluno", component: PanelStudent },
+  { path: "/painel/eletiva", component: PanelElective, beforeEnter: Guard.auth },
+  { path: "/painel/aluno", component: PanelStudent, beforeEnter: Guard.auth  },
 ];
 
 const router = createRouter({

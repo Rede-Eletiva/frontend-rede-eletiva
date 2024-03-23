@@ -146,6 +146,7 @@ import Template from "@/components/TemplateADM";
 import axios from "axios";
 import { ref } from "vue";
 import Modal from "@/components/ModalService.vue";
+import Cookies from "js-cookie";
 
 export default {
   components: {
@@ -177,6 +178,7 @@ export default {
 
     const fetchStudents = async (referenceClasseFilters, moduleFilters) => {
       try {
+        const token = Cookies.get("_myapp_token");
         const response = await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/list-students",
           {
@@ -188,6 +190,11 @@ export default {
               acc[curr] = true;
               return acc;
             }, {})
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -202,10 +209,14 @@ export default {
 
     const downloadExcel = async () => {
       try {
+        const token = Cookies.get("_myapp_token");
         const response = await axios.get(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/download-excel",
           {
             responseType: "blob",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -256,8 +267,14 @@ export default {
 
     const itensFilter = async () => {
       try {
+        const token = Cookies.get("_myapp_token");
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/itens-students"
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/itens-students",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const referenceClasseItems = response.data.reference_classe.map(
@@ -292,6 +309,7 @@ export default {
 
     const addStudents = async () => {
       try {
+        const token = Cookies.get("_myapp_token");
         const response = await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/add-students",
           {
@@ -300,6 +318,11 @@ export default {
             date_birth: data.value.date_birth,
             reference_classe: data.value.reference_classe,
             module: data.value.module,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 

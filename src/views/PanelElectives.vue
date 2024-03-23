@@ -146,6 +146,7 @@ import Template from "@/components/TemplateADM";
 import axios from "axios";
 import Modal from "@/components/ModalService";
 import { ref, computed } from "vue";
+import Cookies from "js-cookie";
 
 export default {
   components: {
@@ -185,8 +186,14 @@ export default {
 
     const fetchElective = async () => {
       try {
+        const token = Cookies.get("_myapp_token"); 
         const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/list-electives"
+          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/list-electives",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         electives.value = Object.values(response.data).flat();
@@ -214,7 +221,9 @@ export default {
     const addElective = async () => {
       const { name, name_teacher, number_vacancies, module, frame } =
         data.value;
+
       try {
+        const token = Cookies.get("_myapp_token");
         await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/create-elective",
           {
@@ -223,6 +232,11 @@ export default {
             number_vacancies,
             module,
             frame,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -240,8 +254,14 @@ export default {
 
     const deleteElective = async (code_elective) => {
       try {
+        const token = Cookies.get("_myapp_token");
         await axios.delete(
-          `https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/delete-elective/${code_elective}`
+          `https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/delete-elective/${code_elective}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
       } catch (error) {
         console.log(error);
@@ -255,6 +275,7 @@ export default {
         data.value;
 
       try {
+        const token = Cookies.get("_myapp_token");
         await axios.put(
           `https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/update-elective/${code}`,
           {
@@ -263,6 +284,11 @@ export default {
             number_vacancies,
             module,
             frame,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
