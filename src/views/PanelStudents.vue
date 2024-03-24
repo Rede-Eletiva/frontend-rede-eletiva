@@ -75,29 +75,50 @@
     </div>
   </Template>
   <Modal @close="toggleFilterModal" :modalActive="filterModalActive">
-  <div class="modal-content">
-    <h1>Filtrar Alunos</h1>
-    <form @submit.prevent="filterStudents">
-      <h2 class="title">Turmas</h2>
-      <div class="input-columns">
-        <div class="column" v-for="(item, index) in itens.reference_classe" :key="index">
-          <input type="checkbox" :id="item.reference_classe" :name="item.reference_classe" v-model="item.checked" />
-          <label>{{ item.reference_classe }}</label>
+    <div class="modal-content">
+      <h1>Filtrar Alunos</h1>
+      <form @submit.prevent="filterStudents">
+        <h2 class="title">Turmas</h2>
+        <div class="input-columns">
+          <div
+            class="column"
+            v-for="(item, index) in itens.reference_classe"
+            :key="index"
+          >
+            <input
+              type="checkbox"
+              :id="item.reference_classe"
+              :name="item.reference_classe"
+              v-model="item.checked"
+            />
+            <label>{{ item.reference_classe }}</label>
+          </div>
         </div>
-      </div>
-      <h2 class="title">Ano</h2>
-      <div class="input-columns">
-        <div class="column" v-for="(item, index) in itens.module" :key="index">
-          <input type="checkbox" :id="item.module" :name="item.module" v-model="item.checked" />
-          <label>{{ item.module }}</label>
+        <h2 class="title">Ano</h2>
+        <div class="input-columns">
+          <div
+            class="column"
+            v-for="(item, index) in itens.module"
+            :key="index"
+          >
+            <input
+              type="checkbox"
+              :id="item.module"
+              :name="item.module"
+              v-model="item.checked"
+            />
+            <label>{{ item.module }}</label>
+          </div>
         </div>
-      </div>
-      <button class="button cancel" type="button" @click="toggleFilterModal">Cancelar</button>
-      <button class="button filter" type="submit" @click="filterStudents">Aplicar</button>
-    </form>
-  </div>
-</Modal>
-
+        <button class="button cancel" type="button" @click="toggleFilterModal">
+          Cancelar
+        </button>
+        <button class="button filter" type="submit" @click="filterStudents">
+          Aplicar
+        </button>
+      </form>
+    </div>
+  </Modal>
 
   <Modal @close="toggleAddModal" :modalActive="addModalActive">
     <div class="modal-content">
@@ -121,7 +142,11 @@
 
         <div class="input-group">
           <label for="reference_classe">Classe de Referência</label>
-          <input type="text" name="reference_classe" v-model="data.reference_classe" />
+          <input
+            type="text"
+            name="reference_classe"
+            v-model="data.reference_classe"
+          />
         </div>
 
         <div class="input-group">
@@ -189,7 +214,7 @@ export default {
             module: moduleFilters.reduce((acc, curr) => {
               acc[curr] = true;
               return acc;
-            }, {})
+            }, {}),
           },
           {
             headers: {
@@ -201,7 +226,6 @@ export default {
         data.value.registeredStudents = response.data.registeredStudents;
         data.value.noRegisteredStudents = response.data.noRegisteredStudents;
         data.value.progress = response.data.progress;
-
       } catch (error) {
         console.log(error.message);
       }
@@ -224,18 +248,7 @@ export default {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
         const matches = filenameRegex.exec(contentDisposition);
 
-        const now = new Date();
-        const formattedDate = `${now.getFullYear()}${(now.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}_${now
-          .getHours()
-          .toString()
-          .padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now
-          .getSeconds()
-          .toString()
-          .padStart(2, "0")}`;
-
-        let fileName = `relatorio_rede_eletiva_${formattedDate}`;
+        let fileName = `relatorio_rede_eletiva_${new Date().toISOString()}.xlsx`;
 
         if (matches != null && matches[1]) {
           fileName = matches[1].replace(/['"]/g, "");
@@ -251,9 +264,10 @@ export default {
         link.click();
 
         link.parentNode.removeChild(link);
+
         window.URL.revokeObjectURL(url);
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     };
 
@@ -296,12 +310,15 @@ export default {
 
     const filterStudents = async () => {
       try {
-        const referenceClasseFilters = itens.value.reference_classe.filter(item => item.checked).map(item => item.reference_classe);
-        const moduleFilters = itens.value.module.filter(item => item.checked).map(item => item.module);
+        const referenceClasseFilters = itens.value.reference_classe
+          .filter((item) => item.checked)
+          .map((item) => item.reference_classe);
+        const moduleFilters = itens.value.module
+          .filter((item) => item.checked)
+          .map((item) => item.module);
 
         await fetchStudents(referenceClasseFilters, moduleFilters);
         toggleFilterModal();
-
       } catch (error) {
         console.log(error.message);
       }
@@ -326,7 +343,7 @@ export default {
           }
         );
 
-        console.log(response.data); 
+        console.log(response.data);
 
         data.value.ra = "";
         data.value.name = "";
@@ -334,14 +351,13 @@ export default {
         data.value.reference_classe = "";
         data.value.module = "";
 
-        toggleAddModal(); 
+        toggleAddModal();
 
         await fetchStudents();
       } catch (error) {
         console.log(error.message);
       }
     };
-
 
     fetchStudents();
     itensFilter();
@@ -355,7 +371,7 @@ export default {
       itensFilter,
       itens,
       filterStudents,
-      addStudents
+      addStudents,
     };
   },
 };
@@ -585,7 +601,6 @@ table .border-data {
 .button:hover {
   background-color: #263a7f;
 }
-
 </style>
 
 
