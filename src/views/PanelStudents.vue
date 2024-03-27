@@ -68,8 +68,16 @@
         </div>
         <!-- Botões para exportar/importar dados -->
         <div class="btn-files">
-          <button @click="downloadExcel" class="xlsx">Exportar dados</button>
-          <button class="csv">Importar e Atualizar</button>
+          <button @click="downloadExcel" class="btn xlsx">
+            Exportar dados
+          </button>
+          <label for="fileInput" class="btn csv">Importar e Atualizar</label>
+          <input
+            type="file"
+            id="fileInput"
+            style="display: none"
+            @change="importStudents"
+          />
         </div>
       </div>
     </div>
@@ -271,6 +279,19 @@ export default {
       }
     };
 
+    const importStudents = async (event) => {
+      try {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios.post("https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/upload-csv", formData)
+        console.log(response.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     const toggleAddModal = () => {
       addModalActive.value = !addModalActive.value;
     };
@@ -327,7 +348,8 @@ export default {
     const addStudents = async () => {
       try {
         const token = Cookies.get("_myapp_token");
-        const response = await axios.post(
+        
+        await axios.post(
           "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/add-students",
           {
             ra: data.value.ra,
@@ -343,7 +365,6 @@ export default {
           }
         );
 
-        console.log(response.data);
 
         data.value.ra = "";
         data.value.name = "";
@@ -364,6 +385,7 @@ export default {
     return {
       data,
       downloadExcel,
+      importStudents,
       addModalActive,
       toggleAddModal,
       filterModalActive,
@@ -518,7 +540,7 @@ table .border-data {
   margin-bottom: 48px;
 }
 
-.btn-files button {
+.btn-files .btn {
   width: 500px;
   height: 32px;
   border-radius: 8px;
@@ -527,6 +549,10 @@ table .border-data {
   color: #f3f3f3;
   font-weight: 600;
   transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11pt;
 }
 
 .btn-files .xlsx:hover {
