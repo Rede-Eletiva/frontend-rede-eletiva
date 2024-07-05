@@ -3,7 +3,7 @@
     "background_color": "#4a90e2",
     "display": "fullscreen",
     "scope": "/frontend-rede-eletiva/",
-    "start_url": "/frontend-rede-eletiva/",
+    "start_url": "https://rede-eletiva.onrender.com/",
     "name": "rede-eletiva",
     "short_name": "redeEletiva",
     "icons": [
