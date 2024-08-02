@@ -470,4 +470,8 @@ table .border-data {
   justify-content: flex-end;
 }
 
+.fa-circle-plus:hover {
+  color: #6bd15a;
+}
+
 </style>
