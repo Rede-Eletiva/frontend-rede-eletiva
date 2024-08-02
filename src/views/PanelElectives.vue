@@ -145,7 +145,7 @@
 
 <script>
 import Template from "@/components/TemplateADM";
-import axios from "axios";
+import { API } from "@/services/api";
 import Modal from "@/components/ModalService";
 import { ref, computed } from "vue";
 import Cookies from "js-cookie";
@@ -189,8 +189,8 @@ export default {
     const fetchElective = async () => {
       try {
         const token = Cookies.get("_myapp_token"); 
-        const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/list-electives",
+        const response = await API.get(
+          "/administrator/list-electives",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -226,8 +226,8 @@ export default {
 
       try {
         const token = Cookies.get("_myapp_token");
-        await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/create-elective",
+        await API.post(
+          "/administrator/create-elective",
           {
             name,
             name_teacher,
@@ -257,8 +257,8 @@ export default {
     const deleteElective = async (code_elective) => {
       try {
         const token = Cookies.get("_myapp_token");
-        await axios.delete(
-          `https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/delete-elective/${code_elective}`,
+        await API.delete(
+          `/administrator/delete-elective/${code_elective}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -278,8 +278,8 @@ export default {
 
       try {
         const token = Cookies.get("_myapp_token");
-        await axios.put(
-          `https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/update-elective/${code}`,
+        await API.put(
+          `/administrator/update-elective/${code}`,
           {
             name,
             name_teacher,

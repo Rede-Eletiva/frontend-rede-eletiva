@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { API } from "../services/api.js" ;
 import Cookie from "js-cookie";
 import Modal from '../components/ModalService.vue';
 import { ref } from 'vue';
@@ -116,8 +116,8 @@ export default {
       };
 
       try {
-        const response = await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/login",
+        const response = await API.post(
+          "/students/login",
           payload
         );
 
@@ -140,7 +140,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/login', payload);
+        const response = await API.post('/administrator/login', payload);
 
         const { token } = response.data;
         if (response.data.success) {

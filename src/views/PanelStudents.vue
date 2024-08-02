@@ -176,7 +176,7 @@
 
 <script>
 import Template from "@/components/TemplateADM";
-import axios from "axios";
+import { API } from "@/services/api";
 import { ref } from "vue";
 import Modal from "@/components/ModalService.vue";
 import Cookies from "js-cookie";
@@ -212,8 +212,8 @@ export default {
     const fetchStudents = async (referenceClasseFilters, moduleFilters) => {
       try {
         const token = Cookies.get("_myapp_token");
-        const response = await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/list-students",
+        const response = await API.post(
+          "/administrator/list-students",
           {
             reference_classe: referenceClasseFilters.reduce((acc, curr) => {
               acc[curr] = true;
@@ -242,8 +242,8 @@ export default {
     const downloadExcel = async () => {
       try {
         const token = Cookies.get("_myapp_token");
-        const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/download-excel",
+        const response = await API.get(
+          "/administrator/download-excel",
           {
             responseType: "blob",
             headers: {
@@ -285,7 +285,7 @@ export default {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await axios.post("https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/upload-csv", formData)
+        const response = await API.post("/administrator/upload-csv", formData)
         console.log(response.data);
       } catch (error) {
         console.log(error.message);
@@ -303,8 +303,8 @@ export default {
     const itensFilter = async () => {
       try {
         const token = Cookies.get("_myapp_token");
-        const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/itens-students",
+        const response = await API.get(
+          "/administrator/itens-students",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -349,8 +349,8 @@ export default {
       try {
         const token = Cookies.get("_myapp_token");
         
-        await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/administrator/add-students",
+        await API.post(
+          "/administrator/add-students",
           {
             ra: data.value.ra,
             name: data.value.name,

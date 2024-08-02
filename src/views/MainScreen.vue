@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { API } from "@/services/api";
 import Cookies from "js-cookie";
 
 export default {
@@ -158,8 +158,8 @@ export default {
       try {
         this.registerLoading = true;
         const token = Cookies.get("_myapp_token");
-        await axios.post(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/register",
+        await API.post(
+          "/students/register",
 
           { code_elective: this.selectedElective[frame] },
           {
@@ -191,8 +191,8 @@ export default {
       try {
         const token = Cookies.get("_myapp_token");
 
-        const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/discipline/list-electives",
+        const response = await API.get(
+          "/discipline/list-electives",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -211,8 +211,8 @@ export default {
       try {
         const token = Cookies.get("_myapp_token");
 
-        const response = await axios.get(
-          "https://backend-rede-eletiva-ete.onrender.com/api/v1/students/dataStudent",
+        const response = await API.get(
+          "/students/dataStudent",
           {
             headers: {
               Authorization: `Bearer ${token}`,
