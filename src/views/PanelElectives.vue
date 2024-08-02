@@ -3,13 +3,13 @@
     <div class="content">
       <h1>Gestão de Eletivas</h1>
       <!-- Iterar sobre os índices das eletivas -->
+      <i @click="toggleAddModal()" class="fa-solid fa-circle-plus"></i>
       <div
         v-for="(indexData, index) in organizedElectives"
         :key="index"
         class="content-table"
       >
         <div class="controls">
-          <i @click="toggleAddModal(index)" class="fa-solid fa-circle-plus"></i>
           <h2>{{ index }} ano</h2>
           <i class="fa-solid fa-toggle-on"></i>
         </div>
@@ -77,8 +77,10 @@
         </div>
         <div class="input-group">
           <label for="module">Ano</label>
-          <select name="module" v-model="data.module" disabled>
-            <option :value="activeIndex">{{ activeIndex }}</option>
+          <select name="module" v-model="data.module">
+            <option :value="1">1</option>
+            <option :value="2">2</option>
+            <option :value="3">3</option>
           </select>
         </div>
         <div class="input-group">
@@ -455,6 +457,17 @@ table .border-data {
 
 .button:hover {
   background-color: #263a7f;
+}
+
+.fa-circle-plus {
+  position: fixed;
+  bottom: 20px;
+  font-size: 30pt;
+  color: #737373;
+  transition: 0.3s;
+  display: flex;
+  width: 95vw;
+  justify-content: flex-end;
 }
 
 </style>

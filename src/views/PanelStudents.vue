@@ -46,7 +46,7 @@
         <!-- Tabela de alunos cadastrados -->
         <div class="content-table">
           <div class="title-status">
-            <h2>Cadastrado</h2>
+            <h2>Não Cadastrado</h2>
           </div>
           <table>
             <tr
