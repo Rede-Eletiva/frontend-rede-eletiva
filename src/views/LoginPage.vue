@@ -235,6 +235,7 @@ export default {
   color: #737373;
   font-size: 14pt;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .access-administrator:hover {
