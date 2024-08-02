@@ -2,5 +2,5 @@
 import axios from 'axios';
 
 export const API = axios.create({
-    baseURL: "http://localhost:3000/api/v1"
+    baseURL: "https://backend-rede-eletiva-ete.onrender.com/api/v1"
   });
