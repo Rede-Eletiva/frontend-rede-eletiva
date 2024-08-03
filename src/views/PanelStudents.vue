@@ -71,13 +71,16 @@
           <button @click="downloadExcel" class="btn xlsx">
             Exportar dados
           </button>
-          <label for="fileInput" class="btn csv">Importar e Atualizar</label>
+          <button @click="openImportModal" class="btn csv">
+            Importar e Atualizar
+          </button>
+          <!-- <label for="fileInput" class="btn csv">Selecionar Arquivos</label>
           <input
             type="file"
             id="fileInput"
             style="display: none"
             @change="importStudents"
-          />
+          /> -->
         </div>
       </div>
     </div>
@@ -172,6 +175,27 @@
       </form>
     </div>
   </Modal>
+  <Modal @close="toggleImportModal" :modalActive="importModalActive">
+      <div class="modal-content">
+        <h1>Importar Arquivo</h1>
+        <form @submit.prevent="prepareFileImport">
+          <div class="input-group">
+            <label for="module">Módulo</label>
+            <select name="module" v-model="importData.module">
+              <option :value="1">1</option>
+              <option :value="2">2</option>
+              <option :value="3">3</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="className">Nome da Turma</label>
+            <input type="text" name="className" v-model="importData.className" />
+          </div>
+          <button class="button" type="submit">Selecionar Arquivo</button>
+        </form>
+      </div>
+    </Modal>
+    <input type="file" ref="fileInput" style="display: none" @change="importStudents" />
 </template>
 
 <script>
@@ -190,6 +214,8 @@ export default {
   setup() {
     const addModalActive = ref(false);
     const filterModalActive = ref(true);
+    const importModalActive = ref(false);
+    const fileInput = ref(null);
     const itens = ref({
       reference_classe: {},
       module: {},
@@ -207,6 +233,11 @@ export default {
       date_birth: "",
       reference_classe: "",
       module: "",
+    });
+
+    const importData = ref({
+      module: 1,
+      className: "",
     });
 
     const fetchStudents = async (referenceClasseFilters, moduleFilters) => {
@@ -284,12 +315,34 @@ export default {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("module", importData.value.module);
+        formData.append("reference_classe", importData.value.className);
 
-        const response = await API.post("/administrator/upload-csv", formData)
+        console.log([...formData]); // Para verificar o FormData
+
+        const response = await API.post("/administrator/upload-csv", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+        });
+
         console.log(response.data);
       } catch (error) {
         console.log(error.message);
       }
+    };
+
+    const openImportModal = () => {
+      importModalActive.value = true;
+    };
+
+    const toggleImportModal = () => {
+      importModalActive.value = !importModalActive.value;
+    };
+
+    const prepareFileImport = () => {
+      toggleImportModal();
+      fileInput.value.click();
     };
 
     const toggleAddModal = () => {
@@ -383,17 +436,23 @@ export default {
     fetchStudents();
     itensFilter();
     return {
-      data,
-      downloadExcel,
-      importStudents,
       addModalActive,
-      toggleAddModal,
       filterModalActive,
+      importModalActive,
+      data,
+      importData,
+      itens,
+      importStudents,
+      openImportModal,
+      toggleImportModal,
+      prepareFileImport,
+      downloadExcel,
+      toggleAddModal,
       toggleFilterModal,
       itensFilter,
-      itens,
       filterStudents,
       addStudents,
+      fileInput
     };
   },
 };
